@@ -1,20 +1,24 @@
 function analyzeSentiment() {
     var text = document.getElementById('textInput').value;
-    
-    // Perform sentiment analysis
-    var sentiment = new Sentiment();
-    var result = sentiment.analyze(text);
-    
-    // Display the result
-    var sentimentResult = "";
-    if (result.score > 0) {
-        sentimentResult = "Positive";
-    } else if (result.score < 0) {
-        sentimentResult = "Negative";
+    var result = getSentiment(text);
+    document.getElementById('result').innerHTML = "<p>Sentiment: " + result + "</p>";
+}
+
+function getSentiment(text) {
+    // Initialize the natural library's sentiment analyzer
+    var natural = require('natural');
+    var analyzer = new natural.SentimentAnalyzer();
+    var stemmer = natural.PorterStemmer;
+
+    // Analyze sentiment
+    var score = analyzer.getSentiment(stemmer.tokenizeAndStem(text));
+
+    // Determine sentiment
+    if (score > 0) {
+        return "Positive";
+    } else if (score < 0) {
+        return "Negative";
     } else {
-        sentimentResult = "Neutral";
+        return "Neutral";
     }
-    
-    // Update the result div
-    document.getElementById('result').innerHTML = "<p>Sentiment: " + sentimentResult + "</p>";
 }
